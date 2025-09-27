@@ -88,10 +88,16 @@ public class NumberTriangle {
      *
      */
     public int retrieve(String path) {
-        // TODO implement this method
-        return -1;
+        if (path.isEmpty()) {
+            return this.root;
+        }
+        else if (path.charAt(0)=='l'){
+            return this.left.retrieve(path);
+        }
+        else{
+            return this.right.retrieve(path);
+        }
     }
-
     /** Read in the NumberTriangle structure from a file.
      *
      * You may assume that it is a valid format with a height of at least 1,
