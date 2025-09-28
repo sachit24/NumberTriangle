@@ -1,4 +1,5 @@
 import java.io.*;
+import java.util.ArrayList;
 
 /**
  * This is the provided NumberTriangle class to be used in this coding task.
@@ -92,10 +93,10 @@ public class NumberTriangle {
             return this.root;
         }
         else if (path.charAt(0)=='l'){
-            return this.left.retrieve(path);
+            return this.left.retrieve(path.substring(1));
         }
         else{
-            return this.right.retrieve(path);
+            return this.right.retrieve(path.substring(1));
         }
     }
     /** Read in the NumberTriangle structure from a file.
@@ -115,22 +116,58 @@ public class NumberTriangle {
         InputStream inputStream = NumberTriangle.class.getClassLoader().getResourceAsStream(fname);
         BufferedReader br = new BufferedReader(new InputStreamReader(inputStream));
 
-
         // TODO define any variables that you want to use to store things
+        ArrayList<ArrayList<NumberTriangle>> nodes = new ArrayList<ArrayList<NumberTriangle>>();
+        NumberTriangle current_parent = null;
 
         // will need to return the top of the NumberTriangle,
         // so might want a variable for that.
         NumberTriangle top = null;
 
         String line = br.readLine();
+        top = new NumberTriangle(Integer.parseInt(line));
+        current_parent = top;
+        int j = 0;
+        nodes.add(new ArrayList<NumberTriangle>());
+        nodes.get(0).add(current_parent);
         while (line != null) {
 
             // remove when done; this line is included so running starter code prints the contents of the file
             System.out.println(line);
+            if (j==0)
+            {
+                j++;
+                line = br.readLine();
+                continue;
+            }
+            nodes.add(new ArrayList<>());
+            String[] numbers = line.split(" ");
+            int k = 0;
+            current_parent = nodes.get(j-1).get(k);
+            for  (int i = 0; i < numbers.length; i++) {
+                NumberTriangle new_tree = new NumberTriangle(Integer.parseInt(numbers[i]));
+                if(i==0) {
+                    // if we are on the first element of the list, only assign the left node of the first parent
+                    current_parent.setLeft(new_tree);
+                    nodes.get(j).add(current_parent.left);
+                }
+                else {
+                    // else, assign the right child of the current parent and the left child of the next parent 
+                    current_parent.setRight(new_tree);
+                    nodes.get(j).add(current_parent.right);
+                    if(i!=numbers.length-1) {
+                        // if we are on the final value in the list, do not go to the next parent.
+                        current_parent = nodes.get(j-1).get(k+1);
+                        k = k+1;
+                        current_parent.setLeft(new_tree);
+                    }
+                }
+            }
 
-            // TODO process the line
+
 
             //read the next line
+            j++;
             line = br.readLine();
         }
         br.close();
