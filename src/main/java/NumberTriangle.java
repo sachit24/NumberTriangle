@@ -130,6 +130,7 @@ public class NumberTriangle {
 
             // TODO process the line
 
+
             //read the next line
             line = br.readLine();
         }
