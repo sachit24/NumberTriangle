@@ -165,6 +165,7 @@ public class NumberTriangle {
             }
 
 
+
             //read the next line
             j++;
             line = br.readLine();
